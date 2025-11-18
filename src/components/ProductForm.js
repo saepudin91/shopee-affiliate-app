@@ -3,23 +3,19 @@ import { supabase } from '../supabaseClient';
 import { v4 as uuidv4 } from 'uuid';
 import './ProductForm.css';
 
-// Variabel MAX_MEDIA dan MAX_VIDEOS DIHAPUS TOTAL dari sini
-// untuk mengatasi error ESLint 'is assigned a value but never used'
+// 💡 PERBAIKAN 1: Pindahkan initialFormState KE LUAR komponen.
+// Ini memastikan objek hanya dibuat sekali (konstan) dan tidak berubah pada setiap render.
+const initialFormState = {
+    name: '',
+    description: '',
+    price: '',
+    affiliate_link: '',
+};
 
 const ProductForm = ({ productToEdit, onClose }) => {
     const isEditMode = !!productToEdit;
 
-    // Definisikan initialFormState di luar agar tidak dibuat ulang pada setiap render,
-    // atau jika didefinisikan di dalam, pastikan ia diabaikan dari dependency array
-    // jika nilainya tidak pernah berubah. Namun, untuk amannya, kita akan masukkan
-    // semua dependency yang diminta ESLint.
-    const initialFormState = {
-        name: '',
-        description: '',
-        price: '',
-        affiliate_link: '',
-    };
-
+    // Sekarang initialFormState sudah ada di luar, Anda bisa langsung menggunakannya
     const [formData, setFormData] = useState(initialFormState);
     const [selectedFile, setSelectedFile] = useState(null);
     const [existingMediaUrl, setExistingMediaUrl] = useState(null);
@@ -36,8 +32,8 @@ const ProductForm = ({ productToEdit, onClose }) => {
     // Helper: Mendeteksi apakah File object adalah video
     const isVideoFile = (file) => file && file.type.startsWith('video/');
 
-    // PERBAIKAN FINAL: Kita tambahkan initialFormState ke dependency array
-    // MENGHINDARI build error Netlify/ESLint: 'initialFormState' is missing
+    // PERBAIKAN 2: initialFormState tidak perlu dimasukkan ke dependency array lagi
+    // karena dia sekarang konstan (didefinisikan di luar komponen).
     useEffect(() => {
         if (isEditMode) {
             setFormData({
@@ -50,21 +46,18 @@ const ProductForm = ({ productToEdit, onClose }) => {
             setExistingMediaUrl(productToEdit.image_url || null);
             setSelectedFile(null);
         } else {
-            // Kita harus membuat salinan baru dari initialFormState jika menggunakannya dalam set state
-            setFormData({ ...initialFormState });
+            setFormData(initialFormState);
             setExistingMediaUrl(null);
             setSelectedFile(null);
         }
         setFileInputKey(Date.now());
-    }, [productToEdit, isEditMode, initialFormState]); // <--- initialFormState DITAMBAHKAN di sini
+    }, [productToEdit, isEditMode]); // <--- dependency array DIBERSIHKAN: initialFormState DIHAPUS
 
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
-
-    // ... (sisa fungsi lainnya tetap sama)
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];

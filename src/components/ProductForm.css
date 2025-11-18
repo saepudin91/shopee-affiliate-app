@@ -1,0 +1,235 @@
+/* ProductForm.css */
+
+/* --- General Form Styling --- */
+.product-form {
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.input-group input[type="text"],
+.input-group input[type="number"],
+.input-group input[type="url"],
+.input-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff5722;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.submit-button:hover:not(:disabled) {
+    background-color: #e64a19;
+}
+
+.submit-button:disabled {
+    background-color: #ffad99;
+    cursor: not-allowed;
+}
+
+
+/* --- MULTI-IMAGE UPLOAD & PREVIEW STYLING --- */
+
+.multi-image-upload {
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+/* 🚨 Kontainer utama yang menampung semua item pratinjau dan kartu upload 🚨 */
+.image-selection-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Jarak antara item */
+    padding: 10px 0;
+    margin-top: 5px;
+    border-top: 1px dashed #ddd;
+    /* Tambahkan garis pemisah di sini */
+}
+
+
+/* 🚨 GAYA KARTU UPLOAD KUSTOM 🚨 */
+.upload-card {
+    /* Ukuran kartu/tombol kecil */
+    width: 80px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    /* Gaya visual kartu */
+    border: 2px dashed #ccc;
+    border-radius: 6px;
+    background-color: #f8f8f8;
+    color: #666;
+    font-size: 0.8em;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.upload-card:hover:not([data-disabled="true"]) {
+    border-color: #ff5722;
+    color: #ff5722;
+    background-color: #fff0e6;
+}
+
+.upload-card[data-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.upload-card .upload-icon {
+    font-size: 2em;
+    line-height: 0.8;
+    font-weight: 300;
+    margin-bottom: 5px;
+}
+
+
+/* 🚨 GAYA PRATINJAU GAMBAR KECIL (80px) 🚨 */
+
+.image-preview-item {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ProductForm.css: Tambahkan di bawah styling image-preview-item */
+
+.image-preview-item {
+    /* ... (styling yang sudah ada) ... */
+    position: relative;
+}
+
+.media-preview-video,
+.media-preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.media-type-tag {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background-color: #ff5722;
+    /* Warna Shopee */
+    color: white;
+    font-size: 0.6em;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-weight: 600;
+    z-index: 10;
+}
+
+.upload-card small.video-limit-note {
+    display: block;
+    font-size: 0.6em;
+    margin-top: 5px;
+    color: #e64a19;
+    font-weight: 500;
+}
+
+/* Tombol Hapus */
+.remove-image-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #dc3545;
+    color: white;
+    border: 1px solid white;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1em;
+    line-height: 1;
+    padding: 0;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.2s;
+}
+
+.remove-image-btn:hover {
+    background-color: #c82333;
+}
+
+/* Gaya khusus untuk file yang baru dipilih */
+.image-preview-item.new-file {
+    border: 2px dashed #007bff;
+}
+
+/* Menyembunyikan elemen lama (jika ada) */
+.file-name-tag,
+.image-preview-section {
+    display: none;
+}
+
+/* Pesan error/sukses */
+.form-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.form-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+.form-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}

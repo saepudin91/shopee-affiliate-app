@@ -1,0 +1,152 @@
+/*
+ * =======================================================
+ * Header General Styling (Desktop Default)
+ * =======================================================
+ */
+.app-header {
+    background-color: #ff5722;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-brand .brand-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: 700;
+}
+
+/* Navigasi Desktop */
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-nav .nav-link,
+.header-nav .nav-button {
+    color: white;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+.header-nav .nav-link:hover,
+.header-nav .nav-button:hover {
+    background-color: #e64a19;
+}
+
+/* Tombol Hamburger (Disembunyikan di Desktop) */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 101;
+}
+
+/*
+ * =======================================================
+ * Mobile Styling (Hamburger Menu & Sidebar)
+ * =======================================================
+ */
+@media (max-width: 768px) {
+
+    /* 1. Tampilkan tombol hamburger */
+    .menu-toggle {
+        display: block;
+    }
+
+    /* 2. Sembunyikan navigasi default di mobile, dan jadikan Sidebar */
+    .header-nav {
+        position: fixed;
+        top: 0;
+        right: 0;
+        /* Gunakan 100vh agar menu menutupi seluruh tinggi layar */
+        height: 100vh;
+        /* Lebar yang cukup, tidak terlalu besar */
+        width: 75%;
+        max-width: 300px;
+        background-color: white;
+        box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
+        flex-direction: column;
+        /* Padding untuk memberi ruang di bawah header utama */
+        padding-top: 60px;
+
+        /* Sembunyikan ke kanan */
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 999;
+        /* Z-index tinggi agar menutupi semua elemen lain */
+
+        /* Penting: Set overflow-y agar bisa di-scroll jika isinya panjang */
+        overflow-y: auto;
+    }
+
+    .close-menu-button {
+        position: absolute;
+        top: 10px;
+        /* Jarak dari atas sidebar */
+        right: 15px;
+        /* Jarak dari kanan sidebar */
+        background: none;
+        border: none;
+        color: #333;
+        /* Warna gelap */
+        font-size: 2em;
+        /* Ukuran besar */
+        font-weight: 300;
+        cursor: pointer;
+        line-height: 1;
+        /* Hapus spasi baris tambahan */
+        padding: 5px;
+        transition: color 0.2s;
+        z-index: 1000;
+    }
+
+    .close-menu-button:hover {
+        color: #ff5722;
+        /* Beri efek hover oranye */
+    }
+
+    /* 3. Tampilkan menu saat dibuka */
+    .header-nav.open {
+        transform: translateX(0);
+    }
+
+    /* 4. Styling link di dalam sidebar */
+    .header-nav .nav-link,
+    .header-nav .nav-button {
+        color: #333;
+        width: 100%;
+        text-align: left;
+        padding: 15px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        margin-top: 0;
+        /* Pastikan elemen ini tidak menyebabkan overflow horizontal */
+        box-sizing: border-box;
+    }
+
+    .header-nav .nav-link:hover,
+    .header-nav .nav-button:hover {
+        background-color: #ffe6e6;
+        color: #ff5722;
+    }
+}

@@ -1,0 +1,351 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+/*
+ * =======================================================
+ * General Styling & Layout
+ * =======================================================
+ */
+.product-list-container {
+    max-width: 1200px;
+    margin: 10px auto 20px auto;
+    padding: 10px;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+.product-list-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 15px;
+    padding-top: 10px;
+    font-size: 1.2em;
+    font-weight: 700;
+}
+
+.loading-state,
+.error-state,
+.no-results-state {
+    text-align: center;
+    padding: 20px;
+    margin: 20px auto;
+    font-size: 1.1em;
+    border-radius: 6px;
+    max-width: 500px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+    grid-column: 1 / -1;
+}
+
+.error-state {
+    background-color: #fff0f0;
+    color: #cc0000;
+}
+
+/*
+ * =======================================================
+ * Product Grid & Card
+ * =======================================================
+ */
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0 5px;
+}
+
+@media (min-width: 768px) {
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .products-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+}
+
+
+.product-card {
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    height: 100%;
+}
+
+.product-card:hover {
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, .15);
+    transform: translateY(-2px);
+}
+
+/* Link Wrapper untuk Media */
+.product-image-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 💡 CONTAINER MEDIA UTAMA (Penting untuk positioning badge) */
+.main-image-container {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    position: relative;
+    /* Wajib untuk Badge VIDEO */
+}
+
+/* 💡 PERBAIKAN: STYLING UNTUK GAMBAR DAN VIDEO UTAMA */
+.product-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    /* Penambahan ini memastikan elemen video mengisi container dengan benar */
+    min-width: 100%;
+    min-height: 100%;
+}
+
+/* 💡 BADGE VIDEO */
+.video-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff5722;
+    /* Warna Shopee */
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 3px 6px;
+    border-radius: 4px;
+    z-index: 10;
+    /* Pastikan badge ada di atas video */
+    pointer-events: none;
+    /* Agar tidak mengganggu klik pada link */
+}
+
+/* --- Galeri Thumbnail (Mini) --- */
+.thumbnail-gallery {
+    display: flex;
+    justify-content: flex-start;
+    gap: 5px;
+    padding: 5px 8px;
+    background-color: #f8f8f8;
+}
+
+.thumbnail-item {
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    border-radius: 2px;
+    border: 1px solid #ddd;
+    flex-shrink: 0;
+}
+
+/* 💡 STYLING UNTUK GAMBAR DAN VIDEO DI THUMBNAIL */
+.thumbnail-media-item {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@media (min-width: 768px) {
+    .thumbnail-item {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* --- End Thumbnail --- */
+
+/* 💡 STYLING UNTUK PESAN MEDIA ERROR */
+.media-error-text {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fce8e8;
+    color: #cc0000;
+    font-size: 0.8em;
+    text-align: center;
+}
+
+.thumbnail-error-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ddd;
+    color: #888;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+
+.product-content {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+/* Link Wrapper untuk Judul */
+.product-title-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.product-card h2 {
+    font-size: 0.95em;
+    color: #333;
+    margin: 5px 0 8px 0;
+    font-weight: 500;
+    height: 2.8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.product-description {
+    display: none;
+}
+
+.product-price {
+    font-size: 1.1em;
+    color: #ee4d2d;
+    font-weight: 700;
+    margin: auto 0 5px 0;
+    padding-top: 5px;
+}
+
+/*
+ * =======================================================
+ * Buy Button Styling (Sederhana)
+ * =======================================================
+ */
+.buy-button {
+    background-color: #ff5722;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: background-color 0.2s ease;
+    display: block;
+    width: 100%;
+    margin-top: auto;
+    box-shadow: none;
+    font-size: 0.9em;
+}
+
+.buy-button:hover {
+    background-color: #e64a19;
+    transform: none;
+    box-shadow: none;
+}
+
+.buy-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    background-color: #d84315;
+}
+
+/*
+ * =======================================================
+ * Search Bar Styling
+ * =======================================================
+ */
+
+.search-bar-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    padding: 0 10px;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 600px;
+    padding: 12px 20px;
+    border: 2px solid #ff5722;
+    border-radius: 30px;
+    font-size: 0.8em;
+    outline: none;
+    transition: box-shadow 0.3s, border-color 0.3s;
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.search-input::placeholder {
+    color: #999;
+}
+
+.search-input:focus {
+    border-color: #e64a19;
+    box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.3);
+}
+
+/*
+ * =======================================================
+ * Mobile Adjustments (Final)
+ * =======================================================
+ */
+
+@media (max-width: 600px) {
+    .product-list-container {
+        padding: 5px;
+    }
+
+    .products-grid {
+        gap: 8px;
+    }
+
+    .product-content {
+        padding: 5px;
+    }
+
+    .product-card h2 {
+        font-size: 0.8em;
+        margin: 3px 0 5px 0;
+        height: 2.5em;
+    }
+
+    .product-price {
+        font-size: 0.9em;
+        margin-bottom: 3px;
+    }
+
+    .thumbnail-gallery {
+        padding: 5px;
+    }
+
+    .thumbnail-item {
+        width: 25px;
+        height: 25px;
+    }
+
+    .buy-button {
+        padding: 8px 0;
+        font-size: 0.8em;
+    }
+
+    .search-input {
+        padding: 8px 15px;
+        font-size: 0.9em;
+        max-width: 100%;
+    }
+}

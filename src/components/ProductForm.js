@@ -3,9 +3,9 @@ import { supabase } from '../supabaseClient';
 import { v4 as uuidv4 } from 'uuid';
 import './ProductForm.css';
 
-// Karena kita hanya mengelola satu media utama (image_url)
-const MAX_MEDIA = 1;
-const MAX_VIDEOS = 1; // Maksimum 1 video per produk (otomatis karena MAX_MEDIA = 1)
+// Hapus atau abaikan variabel yang tidak terpakai untuk menghindari ESlint Warning/Error saat build.
+// const MAX_MEDIA = 1; // Dihapus karena tidak digunakan
+// const MAX_VIDEOS = 1; // Dihapus karena tidak digunakan
 
 const ProductForm = ({ productToEdit, onClose }) => {
     const isEditMode = !!productToEdit;
@@ -18,9 +18,7 @@ const ProductForm = ({ productToEdit, onClose }) => {
     };
 
     const [formData, setFormData] = useState(initialFormState);
-    // Hanya menyimpan SATU file baru
     const [selectedFile, setSelectedFile] = useState(null);
-    // Hanya menyimpan SATU URL media yang sudah ada
     const [existingMediaUrl, setExistingMediaUrl] = useState(null);
     const [fileInputKey, setFileInputKey] = useState(Date.now());
     const [loading, setLoading] = useState(false);
@@ -35,6 +33,8 @@ const ProductForm = ({ productToEdit, onClose }) => {
     // Helper: Mendeteksi apakah File object adalah video
     const isVideoFile = (file) => file && file.type.startsWith('video/');
 
+    // 💡 PERBAIKAN UTAMA: Menambahkan dependencies ke useEffect
+    // Netlify build error terjadi karena hook ini bergantung pada isEditMode dan initialFormState
     useEffect(() => {
         if (isEditMode) {
             setFormData({
@@ -44,16 +44,18 @@ const ProductForm = ({ productToEdit, onClose }) => {
                 affiliate_link: productToEdit.affiliate_link || '',
             });
 
-            // FOKUS: Ambil hanya dari productToEdit.image_url
             setExistingMediaUrl(productToEdit.image_url || null);
             setSelectedFile(null);
         } else {
+            // Karena initialFormState adalah objek, kita tidak bisa langsung menggunakannya sebagai dependency.
+            // Namun, karena initialFormState bersifat konstan (didefinisikan di luar state),
+            // kita bisa menggunakan spread operator untuk membuat salinan baru untuk state.
             setFormData(initialFormState);
             setExistingMediaUrl(null);
             setSelectedFile(null);
         }
         setFileInputKey(Date.now());
-    }, [productToEdit]);
+    }, [productToEdit, isEditMode]); // <--- DEPENDENSI DITAMBAHKAN di sini
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -64,11 +66,7 @@ const ProductForm = ({ productToEdit, onClose }) => {
         const file = e.target.files[0];
         if (!file) return;
 
-        // 💡 PERBAIKAN: Hapus logika pengecekan MAX_VIDEOS yang berlebihan.
-        // Karena kita hanya menerima 1 file, pembatasan video otomatis terpenuhi.
-
         setSelectedFile(file);
-        // Hapus URL lama dari state agar pratinjau hanya menampilkan file baru
         setExistingMediaUrl(null);
         setFileInputKey(Date.now());
         setMessage('');
@@ -79,13 +77,11 @@ const ProductForm = ({ productToEdit, onClose }) => {
             return existingMediaUrl;
         }
 
-        // 1. Dapatkan ekstensi file dan buat nama unik
         const fileExt = selectedFile.name.split('.').pop();
         const fileName = `${uuidv4()}.${fileExt}`;
         const filePath = `product_images/${fileName}`;
 
         try {
-            // 2. Upload file
             const { error } = await supabase.storage
                 .from('product_images')
                 .upload(filePath, selectedFile, {
@@ -94,14 +90,12 @@ const ProductForm = ({ productToEdit, onClose }) => {
                 });
 
             if (error) {
-                // Tambahkan pengecekan jika file sudah ada
                 if (error.message.includes('duplicate key')) {
                     throw new Error("Media sudah ada di bucket. Coba unggah ulang atau ganti nama file.");
                 }
                 throw new Error(`Gagal upload media: ${error.message}`);
             }
 
-            // 3. Dapatkan Public URL
             const { data: publicUrlData } = supabase.storage
                 .from('product_images')
                 .getPublicUrl(filePath);
@@ -126,9 +120,6 @@ const ProductForm = ({ productToEdit, onClose }) => {
                 finalMediaUrl = await uploadMedia();
             }
 
-            // 💡 PERBAIKAN: Validasi media harus diaktifkan untuk mode edit HANYA jika
-            // media sudah dihapus DAN tidak ada file baru yang dipilih.
-            // Biarkan validasi ini tetap kuat: produk harus punya media.
             if (!finalMediaUrl) {
                 throw new Error("Produk harus memiliki media (gambar atau video) utama.");
             }
@@ -146,13 +137,13 @@ const ProductForm = ({ productToEdit, onClose }) => {
                     .from('products')
                     .update(productData)
                     .eq('id', productToEdit.id)
-                    .select(); // Tambahkan .select() untuk Supabase v2
+                    .select();
                 error = result.error;
             } else {
                 const result = await supabase
                     .from('products')
                     .insert([productData])
-                    .select(); // Tambahkan .select() untuk Supabase v2
+                    .select();
                 error = result.error;
             }
 
@@ -169,23 +160,18 @@ const ProductForm = ({ productToEdit, onClose }) => {
         }
     };
 
-    // Fungsi menghapus media yang sudah ada/baru dipilih
     const handleRemoveMedia = () => {
         setExistingMediaUrl(null);
         setSelectedFile(null);
-        setFileInputKey(Date.now()); // Reset input
+        setFileInputKey(Date.now());
     };
 
     const mediaToPreview = selectedFile || existingMediaUrl;
-    // const isVideoMedia = isVideoFile(selectedFile) || isVideoUrl(existingMediaUrl); // Tidak digunakan, bisa dihapus
 
-    // Fungsi bantuan untuk pratinjau media utama
     const renderMediaPreview = (media) => {
         if (!media) return null;
 
-        // Jika media adalah File object (selectedFile), buat URL objek
         const url = (media instanceof File) ? URL.createObjectURL(media) : media;
-        // Tentukan apakah itu video berdasarkan File Type atau URL string
         const isVideo = (media instanceof File) ? isVideoFile(media) : isVideoUrl(media);
 
         return (
@@ -254,10 +240,8 @@ const ProductForm = ({ productToEdit, onClose }) => {
                                     type="file"
                                     name="media_file"
                                     id="media_file"
-                                    // Hanya menerima satu file: gambar atau video
                                     accept="image/*, video/mp4, video/mov, video/webm"
                                     onChange={handleFileChange}
-                                    // 💡 PERBAIKAN: Required HANYA jika mode tambah (bukan edit)
                                     required={!isEditMode}
                                     disabled={loading}
                                     style={{ display: 'none' }}
